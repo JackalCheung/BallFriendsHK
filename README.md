@@ -1,4 +1,4 @@
-# BallFriendHK
+# BallFriendsHK
 
 Platform: Android, iOS
 Language: JavaScript (React Native)
