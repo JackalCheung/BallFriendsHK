@@ -6,6 +6,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import LeagueStack from './screens/League';
 import FriendlyStack from './screens/Friendly';
 import PairingStack from './screens/Pairing';
+import NewsStack from './screens/News';
 import SettingStack from './screens/Setting';
 
 const BottomTab = createBottomTabNavigator();
@@ -55,6 +56,20 @@ function BotTabs() {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="whistle"
+              color={color}
+              size={size}
+            />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="News"
+        component={NewsStack}
+        options={{
+          tabBarLabel: 'News',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons
+              name="newspaper-variant"
               color={color}
               size={size}
             />

@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { StyleSheet, Text, View, FlatList, StatusBar } from 'react-native';
 import DynamicTabView from "react-native-dynamic-tab-view";
+import Moment from 'moment';
+
 
 const leagueData = [
     {
@@ -45,8 +47,8 @@ const DisplayItem = ({ title }) => {
 }
 
 class League extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor(date) {
+        super();
         this.data = [
             { title: "Yesterday", key: "yesterday", color: "yellow" },
             { title: "Today", key: "today", color: "black" },
@@ -55,17 +57,26 @@ class League extends React.Component {
         this.state = {
             defaultIndex: 0,
             selectedDate: new Date(),
-            index: 0
+            index: 0,
+            date: date.date
         };
+        // console.log(props);
+    }
 
+    componentDidMount() {
+        
     }
 
     renderDetail = ({ item }, key) => {
         // <DisplayItem title={item.title} />
+        Moment.locale('zh-hk');
+        var dt = '2016-05-02T00:00:00';
+        console.log(this.state.date);
         if (item.date == key) {
             return (
                 <View style={styles.itemOutlook}>
                     <Text style={styles.title}>{item.title}</Text>
+                    <Text>{Moment(this.state.date).format("YYYY-MM-DD")}</Text> 
                 </View>
             );
         }
@@ -98,6 +109,7 @@ class League extends React.Component {
     }
 
     render() {
+        
         return (
             <DynamicTabView
                 data={this.data}
