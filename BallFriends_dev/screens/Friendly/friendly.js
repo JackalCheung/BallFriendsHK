@@ -1,13 +1,94 @@
 import * as React from 'react';
-import { View, Text, FlatList, StyleSheet, Alert } from 'react-native';
-import { ListItem, Avatar } from 'react-native-elements';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import Moment from 'moment';
+
+import listStyle from '../listStyle';
+
+const testData =
+{
+    League: [{
+        Name: "Premier League",
+        Fixtures:
+            [
+                {
+                    fixture_id: 0,
+                    homeTeam: {
+                        team_name: "Arsenal"
+                    },
+                    awayTeam: {
+                        team_name: "Manchester United"
+                    },
+                    event_date: "2021-01-31T01:30:00+08:00",
+                    goalsHomeTeam: 0,
+                    goalsAwayTeam: 0,
+                    score: {
+                        halftime: "0-0",
+                        fulltime: "0-0"
+                    }
+                },
+                {
+                    fixture_id: 1,
+                    homeTeam: {
+                        team_name: "Southampton"
+                    },
+                    awayTeam: {
+                        team_name: "Aston Villa"
+                    },
+                    event_date: "2021-01-31T04:00:00+08:00",
+                    goalsHomeTeam: 0,
+                    goalsAwayTeam: 1,
+                    score: {
+                        halftime: "0-1",
+                        fulltime: "0-1"
+                    }
+                }
+            ]
+    },
+    {
+        Name: "La Liga",
+        Fixtures:
+            [
+                {
+                    fixture_id: 2,
+                    homeTeam: {
+                        team_name: "Getafe"
+                    },
+                    awayTeam: {
+                        team_name: "Alaves"
+                    },
+                    event_date: "2021-01-31T21:00:00+08:00",
+                    goalsHomeTeam: 0,
+                    goalsAwayTeam: 0,
+                    score: {
+                        halftime: "0-0",
+                        fulltime: "0-0"
+                    }
+                },
+                {
+                    fixture_id: 3,
+                    homeTeam: {
+                        team_name: "Villarreal"
+                    },
+                    awayTeam: {
+                        team_name: "Real Sociedad"
+                    },
+                    event_date: "2021-01-31T04:00:00+08:00",
+                    goalsHomeTeam: 0,
+                    goalsAwayTeam: 1,
+                    score: {
+                        halftime: "1-0",
+                        fulltime: "1-1"
+                    }
+                }
+            ]
+    }]
+};
 
 class Friendly extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            loading: false,
             data: [],
             error: null,
             loading: false,
@@ -21,10 +102,12 @@ class Friendly extends React.Component {
 
     makeRemoteRequest = () => {
         this.setState({ loading: true })
-        fetch("https://api-football-v1.p.rapidapi.com/v2/fixtures/team/33/last/10?timezone=Europe%2FLondon", {
+        /* 
+        // Fetch data from API-football
+        fetch("https://api-football-v1.p.rapidapi.com/v2/fixtures/team/33/2790?timezone=Asia%2FHong_Kong", {
             "method": "GET",
             "headers": {
-                "x-rapidapi-key": "a21a94ececmshacc1a44ea7db60ep11676cjsn24a3bdf19db9",
+                "x-rapidapi-key": "6b559c5a10msh8d4b74be47106f6p175828jsnab34535de49e",
                 "x-rapidapi-host": "api-football-v1.p.rapidapi.com"
             }
         })
@@ -40,40 +123,84 @@ class Friendly extends React.Component {
             .catch(err => {
                 this.setState({ error, loading: false });
             });
+        */
     }
 
-    _renderItem = ({ item, index }) => {
+    naviFixture = () => {
+        alert("Detail in development.")
+    }
+
+    _renderFixture = ({ item, index }) => {
         return (
-            <ListItem bottomDivider
-                onPress={() => { alert(item.fixture_id); }}
-            >
-                <Avatar source={{ uri: item.homeTeam.logo }} />
-                <ListItem.Content>
-                    <ListItem.Title>{item.homeTeam.team_name}</ListItem.Title>
-                    <ListItem.Subtitle>{item.awayTeam.team_name}</ListItem.Subtitle>
-                </ListItem.Content>
-                <ListItem.Chevron />
-            </ListItem>
-        );
+            <View style={listStyle.itemContainer}>
+                <TouchableOpacity style={listStyle.itemCard} onPress={() => { this.naviFixture() }}>
+                    <Text style={listStyle.homeTeam}> {item.homeTeam.team_name} </Text>
+                    <Text style={listStyle.time}> {Moment(item.event_date).format('HH:mm')} </Text>
+                    <Text style={listStyle.awayTeam}> {item.awayTeam.team_name} </Text>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
+    _renderLeague = ({ item, index }) => {
+        // Render data from own database (league by league)
+        return (
+            <View style={listStyle.categoryContainer}>
+                <View style={listStyle.categoryCard}>
+                    <Text style={listStyle.title}>{item.Name}</Text>
+                    <FlatList
+                        keyExtractor={(item, index) => index.toString()}
+                        data={item.Fixtures}
+                        renderItem={this._renderFixture}
+                    />
+                </View>
+            </View>
+        )
+        /* 
+        // Render data from API-football
+        return (
+            <View style={styles.container}>
+                <TouchableOpacity style={styles.card} onPress={() => { this.naviFixture() }}>
+                    <Text style={styles.homeTeam}> {item.homeTeam.team_name} </Text>
+                    <Image style={styles.logo} source={{
+                        uri: item.homeTeam.logo
+                    }} />
+                    <Text style={styles.time}> {Moment(item.event_date).format('HH:mm')} </Text>
+                    <Image style={styles.logo} source={{
+                        uri: item.awayTeam.logo
+                    }} />
+                    <Text style={styles.awayTeam}> {item.awayTeam.team_name} </Text>
+                </TouchableOpacity>
+            </View>
+        )
+        */
     }
 
     render() {
+        // Extract data directly from own database
         return (
             <FlatList
                 keyExtractor={(item, index) => index.toString()}
-                data={this.state.data}
-                renderItem={this._renderItem}
+                data={testData.League}
+                renderItem={this._renderLeague}
             />
         );
+
+        /*
+        // Extract data directly from API-football
+        return (
+            <View style={styles.categoryContainer}>
+                <View style={styles.categoryCard}>
+                    <FlatList
+                        keyExtractor={(item, index) => index.toString()}
+                        data={this.state.data}
+                        renderItem={this._renderLeague}
+                    />
+                </View>
+            </View>
+        );
+        */
     }
 }
-
-const styles = StyleSheet.create({
-    item: {
-        padding: 5,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee'
-    }
-})
 
 export default Friendly;

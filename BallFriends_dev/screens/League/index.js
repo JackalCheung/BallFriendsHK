@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { StyleSheet, Text, View, FlatList, StatusBar } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { HeaderButton, HeaderButtons, Item } from 'react-navigation-header-buttons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -27,10 +28,10 @@ function MyTabs() {
   var date3 = new Date();
   date3.setDate(date3.getDate() + 1);
   return (
-    <Tab.Navigator>
-      <Tab.Screen name={Moment(date1).format("YYYY-MM-DD")} children={()=><League date={date1}/>} />
-      <Tab.Screen name={Moment(date2).format("YYYY-MM-DD")} children={()=><League date={date2}/>} />
-      <Tab.Screen name={Moment(date3).format("YYYY-MM-DD")} children={()=><League date={date3}/>} />
+    <Tab.Navigator lazy initialRouteName={Moment(date2).format("YYYY-MM-DD")}>
+      <Tab.Screen name={Moment(date1).format("YYYY-MM-DD")} children={() => <League date={date1} />} options={{ title: "Yesterday" }}/>
+      <Tab.Screen name={Moment(date2).format("YYYY-MM-DD")} children={() => <League date={date2} />} options={{ title: "Today" }} />
+      <Tab.Screen name={Moment(date3).format("YYYY-MM-DD")} children={() => <League date={date3} />} options={{ title: "Tomorrow" }}/>
     </Tab.Navigator>
   );
 }
@@ -47,7 +48,7 @@ export default function LeagueStack() {
               <Item
                 title="date"
                 iconName="calendar-month"
-                onPress={() => alert('Select date.')}
+                onPress={() => alert("Date selection in development.")}
               />
               <Item
                 title="notification"

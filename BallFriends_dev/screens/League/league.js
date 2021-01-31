@@ -1,152 +1,92 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, FlatList, StatusBar } from 'react-native';
-import DynamicTabView from "react-native-dynamic-tab-view";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Moment from 'moment';
 
-
-const leagueData = [
-    {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-        date: 'today',
-        title: 'First Item',
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        date: 'yesterday',
-        title: 'Second Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        date: 'tomorrow',
-        title: 'Third Item',
-    },
-    {
-        id: '58632a0f-3da1-471f-bd96-145571e29d72',
-        date: 'yesterday',
-        title: 'Fourth Item',
-    },
-    {
-        id: '58655a0f-3da1-471f-bd96-145571e29d72',
-        date: 'tomorrow',
-        title: 'Fifth Item',
-    },
-    {
-        id: '53655a0f-3da1-471f-bd96-145571e29d72',
-        date: '26',
-        title: 'Sixth Item',
-    }
-];
-
-const DisplayItem = ({ title }) => {
-    console.log(title);
-    return (
-        <View style={styles.itemOutlook}>
-            <Text style={styles.title}>{title}</Text>
-        </View>
-    );
-}
+import listStyle from '../listStyle';
 
 class League extends React.Component {
     constructor(date) {
         super();
-        this.data = [
-            { title: "Yesterday", key: "yesterday", color: "yellow" },
-            { title: "Today", key: "today", color: "black" },
-            { title: "Tomorrow", key: "tomorrow", color: "red" }
-        ];
+
         this.state = {
-            defaultIndex: 0,
-            selectedDate: new Date(),
-            index: 0,
-            date: date.date
+            date: date.date,
+            data: [],
+            error: null,
+            loading: false,
+            refreshing: false
         };
-        // console.log(props);
     }
 
     componentDidMount() {
-        
+        this.makeRemoteRequest();
     }
 
-    renderDetail = ({ item }, key) => {
-        // <DisplayItem title={item.title} />
-        Moment.locale('zh-hk');
-        var dt = '2016-05-02T00:00:00';
-        console.log(this.state.date);
-        if (item.date == key) {
-            return (
-                <View style={styles.itemOutlook}>
-                    <Text style={styles.title}>{item.title}</Text>
-                    <Text>{Moment(this.state.date).format("YYYY-MM-DD")}</Text> 
-                </View>
-            );
-        }
+    makeRemoteRequest = () => {
+        this.setState({ loading: true })
+        var url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/2790/" + Moment(this.state.date).format("YYYY-MM-DD") + "?timezone=Asia%2FHong_Kong"
+        console.log(url)
+        /*
+        // Fetch data from API-football
+        fetch(url, {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-key": "6b559c5a10msh8d4b74be47106f6p175828jsnab34535de49e",
+                "x-rapidapi-host": "api-football-v1.p.rapidapi.com"
+            }
+        })
+            .then(res => res.json())
+            .then(res => {
+                console.log(res);
+                this.setState({
+                    data: [...this.state.data, ...res.api.fixtures],
+                    error: res.error || null,
+                    loading: false,
+                    refreshing: false
+                });
+            })
+            .catch(err => {
+                this.setState({ error, loading: false });
+            });
+        this.forceUpdate()
+        */
     }
 
-    _renderItem = (items, index) => {
+    naviFixture = () => {
+        alert("Fixture in development.")
+    }
+
+    _renderItem = ({ item, index }) => {
         return (
-            <View
-                key={items["key"]}
-                style={{ flex: 1 }}
-            >
-                <FlatList
-                    data={leagueData}
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => this.renderDetail({ item }, items["key"])}
-
-                />
+            <View style={listStyle.itemContainer}>
+                <TouchableOpacity style={listStyle.itemCard} onPress={() => { this.naviFixture() }}>
+                    <Text style={listStyle.homeTeam}> {item.homeTeam.team_name} </Text>
+                    <Image style={listStyle.logo} source={{
+                        uri: item.homeTeam.logo
+                    }} />
+                    <Text style={listStyle.time}> {Moment(item.event_date).format('HH:mm')} </Text>
+                    <Image style={listStyle.logo} source={{
+                        uri: item.awayTeam.logo
+                    }} />
+                    <Text style={listStyle.awayTeam}> {item.awayTeam.team_name} </Text>
+                </TouchableOpacity>
             </View>
-        );
-    }
-
-    onChangeTab = () => {
-        this.state.index = this.state.index + 1;
-        var date = new Date();
-        console.log(date);
-        date.setDate(date.getDate() + this.state.index);
-        console.log(date);
-        console.log(this.state.index);
-        // this.data.push({ title: date.toString(), key: date.toString(), color: "blue" });
+        )
     }
 
     render() {
-        
         return (
-            <DynamicTabView
-                data={this.data}
-                renderTab={this._renderItem}
-                defaultIndex={this.state.defaultIndex}
-                containerStyle={styles.container}
-                headerBackgroundColor={'white'}
-                headerTextStyle={styles.headerText}
-                onChangeTab={this.onChangeTab}
-                headerUnderlayColor={'green'}
-            />
+            <View style={listStyle.categoryContainer}>
+                <View style={listStyle.categoryCard}>
+                    <Text style={listStyle.title}>Premier League</Text>
+                    <FlatList
+                        keyExtractor={(item, index) => index.toString()}
+                        data={this.state.data}
+                        renderItem={this._renderItem}
+                    />
+                </View>
+            </View>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    headerContainer: {
-        marginTop: 50
-    },
-    headerText: {
-        color: 'black'
-    },
-    tabItemContainer: {
-        backgroundColor: 'purple'
-    },
-    itemOutlook: {
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-    },
-    title: {
-        fontSize: 32,
-    }
-});
 
 export default League;
