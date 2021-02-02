@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Moment from 'moment';
 
 import listStyle from '../listStyle';
+import Fixture from '../Share/fixture';
 
 const testData =
 {
@@ -107,7 +110,7 @@ class Friendly extends React.Component {
         fetch("https://api-football-v1.p.rapidapi.com/v2/fixtures/team/33/2790?timezone=Asia%2FHong_Kong", {
             "method": "GET",
             "headers": {
-                "x-rapidapi-key": "6b559c5a10msh8d4b74be47106f6p175828jsnab34535de49e",
+                "x-rapidapi-key": "a21a94ececmshacc1a44ea7db60ep11676cjsn24a3bdf19db9",
                 "x-rapidapi-host": "api-football-v1.p.rapidapi.com"
             }
         })
@@ -126,14 +129,18 @@ class Friendly extends React.Component {
         */
     }
 
-    naviFixture = () => {
-        alert("Detail in development.")
-    }
-
     _renderFixture = ({ item, index }) => {
         return (
             <View style={listStyle.itemContainer}>
-                <TouchableOpacity style={listStyle.itemCard} onPress={() => { this.naviFixture() }}>
+                <TouchableOpacity style={listStyle.itemCard}
+                    onPress={() => {
+                        this.props.navigation.navigate('Fixture', {
+                            fixture_id: item.fixture_id,
+                            homeTeam: item.homeTeam.team_name,
+                            awayTeam: item.awayTeam.team_name,
+                            score: item.score.fulltime
+                        });
+                    }}>
                     <Text style={listStyle.homeTeam}> {item.homeTeam.team_name} </Text>
                     <Text style={listStyle.time}> {Moment(item.event_date).format('HH:mm')} </Text>
                     <Text style={listStyle.awayTeam}> {item.awayTeam.team_name} </Text>
@@ -160,7 +167,7 @@ class Friendly extends React.Component {
         // Render data from API-football
         return (
             <View style={styles.container}>
-                <TouchableOpacity style={styles.card} onPress={() => { this.naviFixture() }}>
+                <TouchableOpacity style={styles.card} onPress={() => { this.navFixture() }}>
                     <Text style={styles.homeTeam}> {item.homeTeam.team_name} </Text>
                     <Image style={styles.logo} source={{
                         uri: item.homeTeam.logo
