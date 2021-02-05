@@ -5,11 +5,11 @@ import Moment from 'moment-timezone';
 import listStyle from '../listStyle';
 
 class League extends React.Component {
-    constructor(date) {
+    constructor(props) {
         super();
 
         this.state = {
-            date: date.date,
+            date: props.date,
             data: [],
             error: null,
             loading: false,

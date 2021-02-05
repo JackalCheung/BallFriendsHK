@@ -5,7 +5,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Moment from 'moment';
 
 import listStyle from '../listStyle';
-import Fixture from '../Share/fixture';
 
 const testData =
 {
