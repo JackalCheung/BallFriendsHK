@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+
 import Friendly from './friendly';
-import Fixture from '../Share/fixture';
 
 /*
 const TopTab = createMaterialTopTabNavigator();
@@ -38,9 +38,10 @@ const Stack = createStackNavigator();
 
 export default function FriendlyStack() {
   return (
-    <Stack.Navigator initialRouteName="Friendly">
-      <Stack.Screen name="Friendly" component={Friendly} />
-      <Stack.Screen name="Fixture" component={Fixture} />
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Friendly"
+        component={Friendly} />
     </Stack.Navigator>
   );
 }
