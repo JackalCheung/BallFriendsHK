@@ -8,8 +8,6 @@ import Moment from 'moment';
 
 import League from './league';
 
-const Stack = createStackNavigator();
-
 const MaterialCommunityIconsHeaderButton = (props) => (
   <HeaderButton
     IconComponent={MaterialCommunityIcons}
@@ -21,7 +19,7 @@ const MaterialCommunityIconsHeaderButton = (props) => (
 
 const Tab = createMaterialTopTabNavigator();
 
-function MyTabs() {
+function MyTabs({navigation}) {
   var date1 = new Date();
   date1.setDate(date1.getDate() - 1);
   var date2 = new Date();
@@ -29,12 +27,14 @@ function MyTabs() {
   date3.setDate(date3.getDate() + 1);
   return (
     <Tab.Navigator lazy initialRouteName={Moment(date2).format("YYYY-MM-DD")}>
-      <Tab.Screen name={Moment(date1).format("YYYY-MM-DD")} children={() => <League date={date1} />} options={{ title: "Yesterday" }}/>
-      <Tab.Screen name={Moment(date2).format("YYYY-MM-DD")} children={() => <League date={date2} />} options={{ title: "Today" }} />
-      <Tab.Screen name={Moment(date3).format("YYYY-MM-DD")} children={() => <League date={date3} />} options={{ title: "Tomorrow" }}/>
+      <Tab.Screen name={Moment(date1).format("YYYY-MM-DD")} children={() => <League date={date1} navigation={navigation} />} options={{ title: "Yesterday" }}/>
+      <Tab.Screen name={Moment(date2).format("YYYY-MM-DD")} children={() => <League date={date2} navigation={navigation}/>} options={{ title: "Today" }} />
+      <Tab.Screen name={Moment(date3).format("YYYY-MM-DD")} children={() => <League date={date3} navigation={navigation}/>} options={{ title: "Tomorrow" }}/>
     </Tab.Navigator>
   );
 }
+
+const Stack = createStackNavigator();
 
 export default function LeagueStack() {
   return (

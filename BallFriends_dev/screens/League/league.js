@@ -6,7 +6,7 @@ import listStyle from '../listStyle';
 
 class League extends React.Component {
     constructor(props) {
-        super();
+        super(props);
 
         this.state = {
             date: props.date,
@@ -45,7 +45,7 @@ class League extends React.Component {
                 });
             })
             .catch(err => {
-                this.setState({ error, loading: false });
+                this.setState({ error: err, loading: false });
             });
         this.forceUpdate()
         
@@ -58,7 +58,7 @@ class League extends React.Component {
     displayOption = (event_date, score) => {
         var now = new Date()
         var match = new Date(event_date)
-        if(now.getTime() > match.getTime()) {
+        if (now.getTime() > match.getTime()) {
             return (
                 <Text style={listStyle.time}> {score} </Text>
             )
@@ -91,7 +91,11 @@ class League extends React.Component {
         return (
             <View style={listStyle.categoryContainer}>
                 <View style={listStyle.categoryCard}>
-                    <Text style={listStyle.title}>Premier League</Text>
+                    <Text style={listStyle.title} onPress={() => {
+                        this.props.navigation.navigate('Standing', {
+                            league_id: 2790
+                        });
+                    }}>Premier League</Text>
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
                         data={this.state.data}

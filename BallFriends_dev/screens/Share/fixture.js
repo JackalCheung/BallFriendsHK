@@ -66,7 +66,7 @@ class Fixture extends React.Component {
                 });
             })
             .catch(err => {
-                this.setState({ error, loading: false });
+                this.setState({ error: err, loading: false });
             });
         */
     }
@@ -152,7 +152,6 @@ const styles = StyleSheet.create({
     subTopTab: {
 
     }
-
 })
 
 export default Fixture;
