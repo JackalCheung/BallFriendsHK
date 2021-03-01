@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Moment from 'moment-timezone';
 
-import listStyle from '../listStyle';
+import listStyle from '../Styles/listStyle';
 
 class League extends React.Component {
     constructor(props) {
@@ -18,14 +18,14 @@ class League extends React.Component {
     }
 
     componentDidMount() {
-        this.makeRemoteRequest();
+        this.getFixturesByDate();
     }
 
-    makeRemoteRequest = () => {
+    getFixturesByDate = () => {
         this.setState({ loading: true })
         var url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/2790/" + Moment(this.state.date).format("YYYY-MM-DD") + "?timezone=Asia%2FHong_Kong"
         console.log(url)
-        
+        /*
         // Fetch data from API-football
         fetch(url, {
             "method": "GET",
@@ -48,7 +48,7 @@ class League extends React.Component {
                 this.setState({ error: err, loading: false });
             });
         this.forceUpdate()
-        
+        */
     }
 
     naviFixture = (message) => {

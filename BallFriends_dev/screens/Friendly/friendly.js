@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Moment from 'moment';
 
-import listStyle from '../listStyle';
+import listStyle from '../Styles/listStyle';
 
 const testData =
 {

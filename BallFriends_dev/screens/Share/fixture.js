@@ -1,17 +1,11 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { Dimensions } from 'react-native';
 
-const Tab = createMaterialTopTabNavigator();
+import Theme from '../Styles/theme';
 
-function empty() {
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>In development.</Text>
-        </View>
-    );
-}
+const TopTab = createMaterialTopTabNavigator();
 
 class Fixture extends React.Component {
 
@@ -27,11 +21,6 @@ class Fixture extends React.Component {
             awayTeam: params.awayTeam,
             score: params.score,
             index: 0,
-            routes: [
-                { key: "Detail", title: "Detail" },
-                { key: "Lineup", title: "Lineup" },
-                { key: "Stats", title: "Stats" }
-            ],
             data: [],
             error: null,
             loading: false,
@@ -79,21 +68,41 @@ class Fixture extends React.Component {
         this.state.index = index
     }
 
-    DetailRoute = () => {
-        <View style={[styles.scene, { backgroundColor: '#ff4081' }]} />
-    };
-    
-    LineupRoute = () => {
-        <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />
-    };
-    
-    StatsRoute = () => {
-        <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />
-    };
+    MediaScreen = () => {
+        return (
+            <View style={{ backgroundColor: Theme.primaryColor }}>
+                <Text>Media in development.</Text>
+            </View>
+        );
+    }
+
+    DetailScreen = () => {
+        return (
+            <View style={{ backgroundColor: "green" }}>
+                <Text>Detail in development.</Text>
+            </View>
+        );
+    }
+
+    LineupScreen = () => {
+        return (
+            <View style={{ backgroundColor: "orange" }}>
+                <Text>Lineup in development.</Text>
+            </View>
+        );
+    }
+
+    StatsScreen = () => {
+        return (
+            <View style={{ backgroundColor: "orange" }}>
+                <Text>Stats in development.</Text>
+            </View>
+        );
+    }
 
     render() {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
                 <View style={styles.scoreContainer}>
                     <View style={styles.scoreCard}>
                         <Text style={{ flex: 1.5, color: "white", textAlign: 'center', backgroundColor: "blue" }}>Home Team: {this.state.homeTeam}</Text>
@@ -101,9 +110,30 @@ class Fixture extends React.Component {
                         <Text style={{ flex: 1.5, color: "white", textAlign: 'center', backgroundColor: "blue" }}>Away Team: {this.state.awayTeam}</Text>
                     </View>
                 </View>
-                <View style={{ flex: 3, alignItems: 'center', backgroundColor: "red" }}>
-                    
-                </View>
+                <SafeAreaView style={{ flex: 3 }}>
+                    <TopTab.Navigator tabBarOptions={{
+                        labelStyle: {
+                            fontSize: 18,
+                            textTransform: "none"
+                        },
+                        style: {
+                            height: 20,
+                            elevation: 0,
+                        },
+                        tabStyle: {
+                            width: Dimensions.get('window').width / 3,
+                            height: 20,
+                            position: "relative",
+                            top: -15,
+                        },
+                        scrollEnabled: true,
+                    }} >
+                        <TopTab.Screen name="Media" component={this.MediaScreen} />
+                        <TopTab.Screen name="Detail" component={this.DetailScreen} />
+                        <TopTab.Screen name="Lineup" component={this.LineupScreen} />
+                        <TopTab.Screen name="Stats" component={this.StatsScreen} />
+                    </TopTab.Navigator>
+                </SafeAreaView>
             </View>
         );
         /*

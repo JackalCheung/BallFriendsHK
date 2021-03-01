@@ -1,32 +1,6 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, FlatList } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
 
-const testData = [
-    {
-        rank: 1,
-        teamName: "Arsenal",
-        all: {
-            matchsPlayed: 21,
-            win: 0,
-            draw: 0,
-            lose: 21
-        },
-        goalsDiff: "-20",
-        points: 0
-    },
-    {
-        rank: 2,
-        teamName: "Liverpool",
-        all: {
-            matchsPlayed: 21,
-            win: 1,
-            draw: 1,
-            lose: 19
-        },
-        goalsDiff: "-7",
-        points: 4
-    }
-]
 class Standing extends React.Component {
     constructor(props) {
         super(props);
@@ -35,6 +9,7 @@ class Standing extends React.Component {
 
         this.state = {
             league_id: params.league_id,
+            league_title: "NULL",
             data: [],
             error: null,
             loading: false,
@@ -43,10 +18,10 @@ class Standing extends React.Component {
     }
 
     componentDidMount() {
-        this.makeRemoteRequest();
+        this.getLeagueStandings();
     }
 
-    makeRemoteRequest = () => {
+    getLeagueStandings = () => {
         this.setState({ loading: true })
         var url = "https://api-football-v1.p.rapidapi.com/v2/leagueTable/" + this.state.league_id;
         console.log(url)
@@ -78,105 +53,99 @@ class Standing extends React.Component {
 
     _renderItem = ({ item, index }) => {
         return (
-
-            <View style={styles.teamCard}>
-                <Text style={styles.teamPos}>{item.rank}</Text>
-                <Text style={styles.teamLogo}></Text>
-                <Text style={styles.teamName}>{item.teamName}</Text>
-                <Text style={styles.teamGP}>{item.all.matchsPlayed}</Text>
-                <Text style={styles.teamWin}>{item.all.win}</Text>
-                <Text style={styles.teamGP}>{item.all.draw}</Text>
-                <Text style={styles.teamWin}>{item.all.lose}</Text>
-                <Text style={styles.teamGP}>{item.goalsDiff}</Text>
-                <Text style={styles.teamWin}>{item.points}</Text>
+            <View style={standingStyle.container}>
+                <View style={standingStyle.teamCard}>
+                    <Text style={standingStyle.teamNumberItem}>{item.rank}</Text>
+                    <Image style={standingStyle.teamLogo} source={{
+                        uri: item.logo
+                    }} />
+                    <Text style={standingStyle.teamName}>{item.teamName}</Text>
+                    <Text style={standingStyle.teamNumberItem}>{item.all.matchsPlayed}</Text>
+                    <Text style={standingStyle.teamNumberItem}>{item.all.win}</Text>
+                    <Text style={standingStyle.teamNumberItem}>{item.all.draw}</Text>
+                    <Text style={standingStyle.teamNumberItem}>{item.all.lose}</Text>
+                    <Text style={standingStyle.teamNumberItem}>{item.goalsDiff}</Text>
+                    <Text style={standingStyle.teamNumberItem}>{item.points}</Text>
+                </View>
             </View>
-
-        )
+        );
     }
 
     render() {
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: "column" }}>
-                <View style={{ flex: 0.3, alignItems: 'center' }}>
-                    <View style={styles.teamCard}>
-                        <Text style={styles.teamPos}>#</Text>
-                        <Text style={styles.teamLogo}></Text>
-                        <Text style={styles.teamName}>Team</Text>
-                        <Text style={styles.teamGP}>GP</Text>
-                        <Text style={styles.teamWin}>W</Text>
-                        <Text style={styles.teamGP}>D</Text>
-                        <Text style={styles.teamWin}>L</Text>
-                        <Text style={styles.teamGP}>GD</Text>
-                        <Text style={styles.teamWin}>Pt</Text>
+            <View style={standingStyle.container}>
+                <View style={standingStyle.leagueContainer}>
+                    <Text style={{ fontSize: 30, paddingStart: 5, color: "white", fontWeight: "bold" }}>Premier League</Text>
+                    <Text style={{ fontSize: 15, paddingStart: 5, color: "white", fontWeight: "bold" }}>England</Text>
+                </View>
+                <View style={standingStyle.tableContainer}>
+                    <View style={standingStyle.tableCard}>
+                        <Text style={standingStyle.teamNumberItem}>#</Text>
+                        <Image style={standingStyle.teamLogo}></Image>
+                        <Text style={standingStyle.teamName}>Team</Text>
+                        <Text style={standingStyle.teamNumberItem}>GP</Text>
+                        <Text style={standingStyle.teamNumberItem}>W</Text>
+                        <Text style={standingStyle.teamNumberItem}>D</Text>
+                        <Text style={standingStyle.teamNumberItem}>L</Text>
+                        <Text style={standingStyle.teamNumberItem}>GD</Text>
+                        <Text style={standingStyle.teamNumberItem}>Pt</Text>
+                    </View>
+                    <View style={standingStyle.tableCard}>
+                        <FlatList
+                            keyExtractor={(item, index) => index.toString()}
+                            data={this.state.data}
+                            renderItem={this._renderItem}
+                            contentContainerStyle={{ paddingBottom: 20 }}
+                        />
                     </View>
                 </View>
-                <View style={{ flex: 9, alignItems: 'center' }}>
-                    <FlatList
-                        keyExtractor={(item, index) => index.toString()}
-                        data={testData}
-                        renderItem={this._renderItem}
-                    />
-                </View>
-            </View>
-        );
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>Standing in development.</Text>
-
             </View>
         );
     }
 }
 
-const styles = StyleSheet.create({
-    scoreContainer: {
-        flex: 2,
-        alignItems: "center",
-    },
-    scoreCard: {
+const standingStyle = StyleSheet.create({
+    container: {
         flex: 1,
-        flexDirection: "row",
+    },
+    leagueContainer: {
+        flex: 1,
+        backgroundColor: "#4dabf5",
+        justifyContent: "center"
     },
     tableContainer: {
-        flex: 1,
-
-
+        flex: 9,
+        alignItems: "center"
     },
     tableCard: {
-
-    },
-    teamContainer: {
-        flex: 1,
-        alignItems: "center",
-        backgroundColor: "yellow",
-
+        flexDirection: "row",
+        borderBottomWidth: 1,
+        borderBottomColor: "grey",
+        paddingTop: 3,
+        opacity: .9
     },
     teamCard: {
         flexDirection: "row",
+        justifyContent: "center",
         alignItems: "center",
-
-    },
-    teamPos: {
-        flex: .5,
-        backgroundColor: "red"
+        height: 50,
+        borderBottomWidth: 1,
+        borderBottomColor: "grey"
     },
     teamLogo: {
         flex: .5,
-        backgroundColor: "blue"
+        width: 25,
+        height: 25,
+        resizeMode: "contain",
+        alignItems: "center"
     },
     teamName: {
         flex: 2,
-        backgroundColor: "green",
     },
-    teamGP: {
+    teamNumberItem: {
         flex: .5,
-        backgroundColor: "grey"
+        textAlign: "center",
     },
-    teamWin: {
-        flex: .5,
-        backgroundColor: "purple"
-    }
-    // teamLose, teamPoint, teamGD
 })
 
 export default Standing;

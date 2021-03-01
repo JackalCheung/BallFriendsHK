@@ -19,17 +19,22 @@ const MaterialCommunityIconsHeaderButton = (props) => (
 
 const Tab = createMaterialTopTabNavigator();
 
-function MyTabs({navigation}) {
+function MyTabs({ navigation }) {
   var date1 = new Date();
   date1.setDate(date1.getDate() - 1);
   var date2 = new Date();
   var date3 = new Date();
   date3.setDate(date3.getDate() + 1);
   return (
-    <Tab.Navigator lazy initialRouteName={Moment(date2).format("YYYY-MM-DD")}>
-      <Tab.Screen name={Moment(date1).format("YYYY-MM-DD")} children={() => <League date={date1} navigation={navigation} />} options={{ title: "Yesterday" }}/>
-      <Tab.Screen name={Moment(date2).format("YYYY-MM-DD")} children={() => <League date={date2} navigation={navigation}/>} options={{ title: "Today" }} />
-      <Tab.Screen name={Moment(date3).format("YYYY-MM-DD")} children={() => <League date={date3} navigation={navigation}/>} options={{ title: "Tomorrow" }}/>
+    <Tab.Navigator
+      lazy
+      initialRouteName={Moment(date2).format("YYYY-MM-DD")}
+      tabBarOptions={{
+        scrollEnabled: true
+      }}>
+      <Tab.Screen name={Moment(date1).format("YYYY-MM-DD")} children={() => <League date={date1} navigation={navigation} />} options={{ title: "Yesterday" }} />
+      <Tab.Screen name={Moment(date2).format("YYYY-MM-DD")} children={() => <League date={date2} navigation={navigation} />} options={{ title: "Today" }} />
+      <Tab.Screen name={Moment(date3).format("YYYY-MM-DD")} children={() => <League date={date3} navigation={navigation} />} options={{ title: "Tomorrow" }} />
     </Tab.Navigator>
   );
 }
@@ -56,7 +61,11 @@ export default function LeagueStack() {
                 onPress={() => console.log("Click")}
               />
             </HeaderButtons>
-          )
+          ),
+          headerStyle:
+          {
+            elevation: 0,
+          }
         }}
       />
     </Stack.Navigator>
