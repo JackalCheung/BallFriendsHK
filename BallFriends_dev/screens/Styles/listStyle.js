@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native';
 const listStyle = StyleSheet.create({
     categoryContainer: {
         flex: 1,
-        backgroundColor: "#ecf0f1",
         padding: 5,
         alignItems: "center",
     },
@@ -21,13 +20,11 @@ const listStyle = StyleSheet.create({
     itemContainer: {
         flex: 1,
         justifyContent: "center",
-        backgroundColor: "white",
         padding: 5,
         alignItems: "center",
     },
     itemCard: {
         width: "95%",
-        backgroundColor: "white",
         padding: 3,
         flexDirection: "row",
         alignItems: "center",

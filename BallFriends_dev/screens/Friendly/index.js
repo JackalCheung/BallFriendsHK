@@ -41,7 +41,14 @@ export default function FriendlyStack() {
     <Stack.Navigator>
       <Stack.Screen
         name="Friendly"
-        component={Friendly} />
+        component={Friendly}
+        options={{
+          headerStyle:
+          {
+            elevation: 0,
+          }
+        }}
+      />
     </Stack.Navigator>
   );
 }

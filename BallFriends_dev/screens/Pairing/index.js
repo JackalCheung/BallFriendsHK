@@ -10,6 +10,12 @@ export default function PairingStack() {
       <Stack.Screen
         name="Pairing"
         component={Pairing}
+        options={{
+          headerStyle:
+          {
+            elevation: 0,
+          }
+        }}
       />
     </Stack.Navigator>
   );

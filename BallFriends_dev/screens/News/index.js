@@ -10,6 +10,12 @@ export default function NewsStack() {
       <Stack.Screen
         name="News"
         component={News}
+        options={{
+          headerStyle:
+          {
+            elevation: 0,
+          }
+        }}
       />
     </Stack.Navigator>
   );

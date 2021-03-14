@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -12,6 +12,7 @@ import SettingStack from './screens/Setting';
 
 import Fixture from './screens/Share/fixture';
 import Standing from './screens/Share/standing';
+import Theme from './screens/Styles/theme';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -20,7 +21,7 @@ function BotTabs() {
     <BottomTab.Navigator
       initialRouteName="League"
       tabBarOptions={{
-        activeTintColor: '#e91e63',
+        activeTintColor: Theme.primaryColor,
       }}
     >
       <BottomTab.Screen
@@ -101,13 +102,26 @@ function BotTabs() {
 const Stack = createStackNavigator();
 
 export default function App() {
+  // const scheme = useColorScheme();
+
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="BotTabs">
-        <Stack.Screen options={{headerShown: false}} name="BotTabs" component={BotTabs} />
-        <Stack.Screen name="Fixture" component={Fixture} />
-        <Stack.Screen name="Standing" component={Standing} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    
+      <NavigationContainer theme={DefaultTheme}>
+        <Stack.Navigator initialRouteName="BotTabs">
+          <Stack.Screen name="BotTabs" component={BotTabs}
+            options={{
+              headerShown: false
+            }} />
+          <Stack.Screen name="Fixture" component={Fixture} />
+          <Stack.Screen name="Standing" component={Standing}
+            options={{
+              headerStyle:
+              {
+                elevation: 0,
+              }
+            }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    
   );
 }

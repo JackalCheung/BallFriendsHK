@@ -1,15 +1,31 @@
 import * as React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, SectionList } from 'react-native';
 import Moment from 'moment-timezone';
 
-import listStyle from '../listStyle';
+import listStyle from '../Styles/listStyle';
 
 class League extends React.Component {
     constructor(props) {
-        super();
+        super(props);
 
         this.state = {
             date: props.date,
+            league_info: [{
+                id: 2790,
+                name: "Premier League"
+            },
+            {
+                id: 2755,
+                name: "Bundesliga 1"
+            },
+            {
+                id: 2664,
+                name: "Ligue 1",
+            },
+            {
+                id: 2833,
+                name: "Primera Division"
+            }],
             data: [],
             error: null,
             loading: false,
@@ -18,14 +34,13 @@ class League extends React.Component {
     }
 
     componentDidMount() {
-        this.makeRemoteRequest();
+        this.getFixturesByDate();
     }
 
-    makeRemoteRequest = () => {
-        this.setState({ loading: true })
-        var url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/2790/" + Moment(this.state.date).format("YYYY-MM-DD") + "?timezone=Asia%2FHong_Kong"
-        console.log(url)
-        
+    getFixturesByDate = () => {
+        this.setState({ loading: true });
+        var url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/2790/" + Moment(this.state.date).format("YYYY-MM-DD") + "?timezone=Asia%2FHong_Kong";
+
         // Fetch data from API-football
         fetch(url, {
             "method": "GET",
@@ -43,12 +58,12 @@ class League extends React.Component {
                     loading: false,
                     refreshing: false
                 });
+                console.log(this.state.data);
             })
             .catch(err => {
-                this.setState({ error, loading: false });
+                this.setState({ error: err, loading: false });
             });
         this.forceUpdate()
-        
     }
 
     naviFixture = (message) => {
@@ -58,7 +73,7 @@ class League extends React.Component {
     displayOption = (event_date, score) => {
         var now = new Date()
         var match = new Date(event_date)
-        if(now.getTime() > match.getTime()) {
+        if (now.getTime() > match.getTime()) {
             return (
                 <Text style={listStyle.time}> {score} </Text>
             )
@@ -72,7 +87,11 @@ class League extends React.Component {
     _renderItem = ({ item, index }) => {
         return (
             <View style={listStyle.itemContainer}>
-                <TouchableOpacity style={listStyle.itemCard} onPress={() => { this.naviFixture(item.score.fulltime) }}>
+                <TouchableOpacity style={listStyle.itemCard} onPress={() => {
+                    this.props.navigation.navigate('Fixture', {
+                        fixture_id: item.fixture_id,
+                    });
+                }}>
                     <Text style={listStyle.homeTeam}> {item.homeTeam.team_name} </Text>
                     <Image style={listStyle.logo} source={{
                         uri: item.homeTeam.logo
@@ -91,7 +110,11 @@ class League extends React.Component {
         return (
             <View style={listStyle.categoryContainer}>
                 <View style={listStyle.categoryCard}>
-                    <Text style={listStyle.title}>Premier League</Text>
+                    <Text style={listStyle.title} onPress={() => {
+                        this.props.navigation.navigate('Standing', {
+                            league_id: 2790
+                        });
+                    }}>Premier League</Text>
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
                         data={this.state.data}
