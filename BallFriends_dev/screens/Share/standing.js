@@ -21,8 +21,8 @@ class Standing extends React.Component {
         this.getLeagueStandings();
     }
 
-    getLeagueStandings = () => {
-        this.setState({ loading: true })
+    getLeagueStandings() {
+        this.setState({ loading: true });
         var url = "https://api-football-v1.p.rapidapi.com/v2/leagueTable/" + this.state.league_id;
         console.log(url)
         /*
