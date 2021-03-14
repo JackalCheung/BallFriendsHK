@@ -10,6 +10,12 @@ export default function SettingStack() {
       <Stack.Screen
         name="Setting"
         component={Setting}
+        options={{
+          headerStyle:
+          {
+            elevation: 0,
+          }
+        }}
       />
     </Stack.Navigator>
   );

@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Moment from 'moment';
 
-import listStyle from '../listStyle';
+import listStyle from '../Styles/listStyle';
 
 const testData =
 {
@@ -13,7 +13,7 @@ const testData =
         Fixtures:
             [
                 {
-                    fixture_id: 0,
+                    fixture_id: 157508,
                     homeTeam: {
                         team_name: "Arsenal"
                     },
@@ -135,9 +135,6 @@ class Friendly extends React.Component {
                     onPress={() => {
                         this.props.navigation.navigate('Fixture', {
                             fixture_id: item.fixture_id,
-                            homeTeam: item.homeTeam.team_name,
-                            awayTeam: item.awayTeam.team_name,
-                            score: item.score.fulltime
                         });
                     }}>
                     <Text style={listStyle.homeTeam}> {item.homeTeam.team_name} </Text>
