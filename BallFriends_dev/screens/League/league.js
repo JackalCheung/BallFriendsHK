@@ -39,7 +39,8 @@ class League extends React.Component {
 
     getFixturesByDate = () => {
         this.setState({ loading: true });
-        var url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/2790/" + Moment(this.state.date).format("YYYY-MM-DD") + "?timezone=Asia%2FHong_Kong";
+        // var url = "https://api-football-v1.p.rapidapi.com/v2/fixtures/league/2790/" + Moment(this.state.date).format("YYYY-MM-DD") + "?timezone=Asia%2FHong_Kong";
+        var url = `https://api-football-v1.p.rapidapi.com/v3/fixtures?date=${Moment(this.state.date).format("YYYY-MM-DD")}&league=4&season=2020&timezone=Asia%2FHong_Kong`;
 
         // Fetch data from API-football
         fetch(url, {
@@ -53,7 +54,7 @@ class League extends React.Component {
             .then(res => res.json())
             .then(res => {
                 this.setState({
-                    data: [...this.state.data, ...res.api.fixtures],
+                    data: [...this.state.data, ...res.response],
                     error: res.error || null,
                     loading: false,
                     refreshing: false
@@ -75,7 +76,7 @@ class League extends React.Component {
         var match = new Date(event_date)
         if (now.getTime() > match.getTime()) {
             return (
-                <Text style={listStyle.time}> {score} </Text>
+                <Text style={listStyle.time}> {score.home} : {score.away} </Text>
             )
         } else {
             return (
@@ -92,15 +93,15 @@ class League extends React.Component {
                         fixture_id: item.fixture_id,
                     });
                 }}>
-                    <Text style={listStyle.homeTeam}> {item.homeTeam.team_name} </Text>
+                    <Text style={listStyle.homeTeam}> {item.teams.home.name} </Text>
                     <Image style={listStyle.logo} source={{
-                        uri: item.homeTeam.logo
+                        uri: item.teams.home.logo
                     }} />
-                    {this.displayOption(item.event_date, item.score.fulltime)}
+                    {this.displayOption(item.fixture.date, item.goals)}
                     <Image style={listStyle.logo} source={{
-                        uri: item.awayTeam.logo
+                        uri: item.teams.away.logo
                     }} />
-                    <Text style={listStyle.awayTeam}> {item.awayTeam.team_name} </Text>
+                    <Text style={listStyle.awayTeam}> {item.teams.away.name} </Text>
                 </TouchableOpacity>
             </View>
         )
@@ -112,9 +113,9 @@ class League extends React.Component {
                 <View style={listStyle.categoryCard}>
                     <Text style={listStyle.title} onPress={() => {
                         this.props.navigation.navigate('Standing', {
-                            league_id: 2790
+                            league_id: 39
                         });
-                    }}>Premier League</Text>
+                    }}>EURO 2020</Text>
                     <FlatList
                         keyExtractor={(item, index) => index.toString()}
                         data={this.state.data}

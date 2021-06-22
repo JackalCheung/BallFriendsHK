@@ -23,9 +23,9 @@ class Standing extends React.Component {
 
     getLeagueStandings() {
         this.setState({ loading: true });
-        var url = "https://api-football-v1.p.rapidapi.com/v2/leagueTable/" + this.state.league_id;
+        var url = `https://api-football-v1.p.rapidapi.com/v3/standings?season=2020&league=${this.state.league_id}`;
         console.log(url)
-        /*
+        
         // Fetch data from API-football
         fetch(url, {
             "method": "GET",
@@ -38,7 +38,7 @@ class Standing extends React.Component {
             .then(res => res.json())
             .then(res => {
                 this.setState({
-                    data: [...this.state.data, ...res.api.standings[0]],
+                    data: [...this.state.data, ...res.response[0].league.standings[0]],
                     error: res.error || null,
                     loading: false,
                     refreshing: false
@@ -48,7 +48,6 @@ class Standing extends React.Component {
                 this.setState({ error: err, loading: false });
             });
         this.forceUpdate()
-        */
     }
 
     _renderItem = ({ item, index }) => {
@@ -57,10 +56,10 @@ class Standing extends React.Component {
                 <View style={standingStyle.teamCard}>
                     <Text style={standingStyle.teamNumberItem}>{item.rank}</Text>
                     <Image style={standingStyle.teamLogo} source={{
-                        uri: item.logo
+                        uri: item.team.logo
                     }} />
-                    <Text style={standingStyle.teamName}>{item.teamName}</Text>
-                    <Text style={standingStyle.teamNumberItem}>{item.all.matchsPlayed}</Text>
+                    <Text style={standingStyle.teamName}>{item.team.name}</Text>
+                    <Text style={standingStyle.teamNumberItem}>{item.all.played}</Text>
                     <Text style={standingStyle.teamNumberItem}>{item.all.win}</Text>
                     <Text style={standingStyle.teamNumberItem}>{item.all.draw}</Text>
                     <Text style={standingStyle.teamNumberItem}>{item.all.lose}</Text>
